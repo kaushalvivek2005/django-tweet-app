@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Django Tweet
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-4xl text-center font-bold text-red-500">
+        welcome to our tweet app
+    </h1>
+    
+    <a class="bg-blue-900 " href="{% url 'tweet_create'%}">Create tweet</a>
+    <div class ="container row gap-3 ">
+        {% for tweet in tweets %}
+            <div class="border-2 w-2xl">
+                {% if tweet.photo %}
+                    <img class="w-2xl h-2xl" src="{{ tweet.photo.url }}" alt="">
+                {% endif %}
+                <div class="p-5 ">
+                    <h2 class="text-xl font-bold">{{ tweet.user.username }}</h2>
+                    <h3 >{{ tweet.text }}</h3>
+                    {%if tweet.user == user%}
+                    <a class=" font-bold rounded bg-blue-500" href="{% url 'tweet_edit' tweet.id %}">
+                        Edit </a>
+                    
+                    <a class=" font-bold rounded bg-red-500" href="{% url 'tweet_delete' tweet.id %}">
+                        Delete</a>  
+                    {%endif%}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

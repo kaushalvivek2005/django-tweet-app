@@ -1,0 +1,18 @@
+{%extends "layout.html" %}
+
+{% block title %}
+login
+{% endblock %}
+
+{% block content %}
+<h1 class="font-bold text-4xl text-center py-2">
+    Login Form</h1>
+<form method="POST" class="border-2">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit" class="bg-blue-500 text-white rounded border-2">Submit</button>
+</form>
+<p> New User?
+<a class=" bg-yellow-500 " href="{%url 'register'%}">Register here</a>
+</p>
+{% endblock %}
