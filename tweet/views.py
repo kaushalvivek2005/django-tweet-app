@@ -4,6 +4,9 @@ from .forms import TweetForm, UserRegistrationForm
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
+from .serializers import TweetSerializer
+from rest_framework.renderers import JSONRenderer
+from django.http import HttpResponse
 # Create your views here.
 
 def index(request):
@@ -59,3 +62,15 @@ def register(request):
          else:
              form = UserRegistrationForm()
          return render(request, 'registration/register.html', {'form': form})
+
+def tweet_detail_api(request, tweet_id):
+    tweet = get_object_or_404(Tweet, pk=tweet_id)
+    serializer = TweetSerializer(tweet)
+    json_data = JSONRenderer().render(serializer.data)
+    return HttpResponse(json_data, content_type='application/json')
+
+def tweet_list_api(request):
+    tweet = Tweet.objects.all()
+    serializer = TweetSerializer(tweet, many=True)
+    json_data = JSONRenderer().render(serializer.data)
+    return HttpResponse(json_data, content_type='application/json')
