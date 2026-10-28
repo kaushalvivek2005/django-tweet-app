@@ -12,4 +12,5 @@ urlpatterns = [
 
     path('api/tweets/<int:tweet_id>/', views.tweet_detail_api, name='tweet_detail_api'),
     path('api/tweets/', views.tweet_list_api, name='tweet_list_api'),
+    path('api/tweets/create/', views.tweet_create_api, name='tweet_create_api'),
 ]

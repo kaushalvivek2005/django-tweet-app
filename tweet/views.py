@@ -7,6 +7,9 @@ from django.contrib.auth import login
 from .serializers import TweetSerializer
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse, JsonResponse
+import io
+from rest_framework.parsers import JSONParser
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def index(request):
@@ -74,3 +77,20 @@ def tweet_list_api(request):
     serializer = TweetSerializer(tweet, many=True)
     json_data = JSONRenderer().render(serializer.data)
     return HttpResponse(json_data, content_type='application/json')
+
+@csrf_exempt
+def tweet_create_api(request):
+    if request.method == 'POST':
+        json_data = request.body
+        stream =io.BytesIO(json_data)
+        JSON_data = JSONParser().parse(stream)
+        serializer = TweetSerializer(data=JSON_data)
+        if serializer.is_valid():
+            # serializer.save()
+            serializer.save(user=request.user)
+            msg = {'message': 'Tweet created successfully'}
+            json_data = JSONRenderer().render(msg)
+            return HttpResponse(json_data, content_type='application/json')
+            # return JsonResponse(msg, status=201)
+        json_data = JSONRenderer().render(serializer.errors)
+        return JsonResponse(serializer.errors)
